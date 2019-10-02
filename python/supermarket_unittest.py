@@ -15,8 +15,7 @@ class TestTennis(unittest.TestCase):
         catalog.add_product(toothbrush, 0.99)
         catalog.add_product(apples, 1.99)
 
-        self.assertEqual({apples, toothbrush}, catalog.products)
-        #self.assertEqual(1.99, catalog.unit_price(apples))
+        self.assertEqual({"apples":apples, "toothbrush":toothbrush}, catalog.products)
 
     def test_catalog_unit_price(self):
         catalog = FakeCatalog()
