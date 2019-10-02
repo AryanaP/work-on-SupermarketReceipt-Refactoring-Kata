@@ -9,4 +9,5 @@ class SupermarketCatalog:
 
 
 
-# Methodes vont chercher dans la BDD mais pas développé
+
+
