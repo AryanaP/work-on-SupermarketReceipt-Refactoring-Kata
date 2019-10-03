@@ -7,10 +7,34 @@ from fake_catalog import FakeCatalog
 
 class TestTennis(unittest.TestCase):
 
+    def test_catalog_add_product(self):
+        catalog = FakeCatalog()
+        toothbrush = Product("toothbrush", ProductUnit.EACH)
+        apples = Product("apples", ProductUnit.KILO)
+
+        catalog.add_product(toothbrush, 0.99)
+        catalog.add_product(apples, 1.99)
+
+        self.assertEqual({"apples":apples, "toothbrush":toothbrush}, catalog.products)
+
+    def test_catalog_unit_price(self):
+        catalog = FakeCatalog()
+        toothbrush = Product("toothbrush", ProductUnit.EACH)
+        apples = Product("apples", ProductUnit.KILO)
+
+        catalog.add_product(toothbrush, 0.99)
+        catalog.add_product(apples, 1.99)
+
+        self.assertEqual(0.99, catalog.unit_price(toothbrush))
+        self.assertEqual(1.99, catalog.unit_price(apples))
+
+    def test_shopping_cart_add_item_quantity(self):
+        catalog = FakeCatalog()
+        #remplir catalogue
+
+
     def test_ten_percent_discount(self):
         catalog = FakeCatalog()
-
-        # add products to catalog
         toothbrush = Product("toothbrush", ProductUnit.EACH)
         apples = Product("apples", ProductUnit.KILO)
         catalog.add_product(toothbrush, 0.99)
