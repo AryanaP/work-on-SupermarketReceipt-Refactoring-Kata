@@ -73,7 +73,6 @@ class TestTennis(unittest.TestCase):
     #    receipt = Receipt()
     #    offer =  Offer()
 
-
     #def test_shopping_cart_handle_offers_three_for_two(self):
     #    catalog = FakeCatalog()
     #    toothbrush = Product("toothbrush", ProductUnit.EACH)
