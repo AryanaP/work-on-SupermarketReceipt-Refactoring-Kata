@@ -1,6 +1,6 @@
 import unittest
 
-from model_objects import Product, SpecialOfferType, ProductUnit, Discount
+from model_objects import Product, SpecialOfferType, ProductUnit, Discount, Offer
 from shopping_cart import ShoppingCart
 from teller import Teller
 from fake_catalog import FakeCatalog
@@ -8,6 +8,7 @@ from receipt import Receipt, ReceiptItem
 
 class TestTennis(unittest.TestCase):
 
+# CATALOG.PY
     def test_catalog_add_product(self):
         catalog = FakeCatalog()
         toothbrush = Product("toothbrush", ProductUnit.EACH)
@@ -29,16 +30,7 @@ class TestTennis(unittest.TestCase):
         self.assertEqual(0.99, catalog.unit_price(toothbrush))
         self.assertEqual(1.99, catalog.unit_price(apples))
 
-    def test_shopping_cart_add_item_quantity(self):
-        cart = ShoppingCart()
-        apples = Product("apples", ProductUnit.KILO)
-
-        cart.add_item_quantity(apples, 2.5)
-        self.assertEqual(2.5, cart.product_quantities[apples])
-
-        cart.add_item_quantity(apples, 1.2)
-        self.assertEqual(3.7, cart.product_quantities[apples])
-
+# RECEIPT.PY
     def test_receipt_total_price(self):
         toothbrush = Product("toothbrush", ProductUnit.EACH)
         apples = Product("apples", ProductUnit.KILO)
@@ -67,11 +59,55 @@ class TestTennis(unittest.TestCase):
         receipt.add_product(apples, 2, 1, 2)
         self.assertEqual(2, len(receipt._items))
 
+    def test_receipt_add_discount(self):
+        toothbrush = Product("toothbrush", ProductUnit.EACH)
+        receipt_toothbrush = ReceiptItem(toothbrush, 2, 1.5, 3)
 
-    #def test_shopping_cart_handle_offers(self):
-    #    catalog = FakeCatalog()
-    #    receipt = Receipt()
-    #    offer =  Offer()
+        discount = Discount(toothbrush, "test", 1.5)
+
+        receipt = Receipt()
+        receipt._items = [receipt_toothbrush]
+        self.assertEqual(0, len(receipt._discounts))
+
+        receipt.add_discount(discount)
+        self.assertEqual(1, len(receipt._discounts))
+        self.assertEqual(discount, receipt._discounts[0])
+
+# SHOPPING_CART.PY
+    def test_shopping_cart_add_item(self):
+        cart = ShoppingCart()
+        apples = Product("apples", ProductUnit.KILO)
+
+        self.assertEqual(0, len(cart._items))
+        cart.add_item(apples)
+        self.assertEqual(1, len(cart._items))
+
+    def test_shopping_cart_add_item_quantity(self):
+        cart = ShoppingCart()
+        apples = Product("apples", ProductUnit.KILO)
+
+        cart.add_item_quantity(apples, 2.5)
+        self.assertEqual(2.5, cart.product_quantities[apples])
+
+        cart.add_item_quantity(apples, 1.2)
+        self.assertEqual(3.7, cart.product_quantities[apples])
+
+    def test_shopping_handle_offers_no_offers(self):
+        catalog = FakeCatalog()
+        toothbrush = Product("toothbrush", ProductUnit.EACH)
+        receipt_toothbrush = ReceiptItem(toothbrush, 2, 1.5, 3)
+
+        receipt = Receipt()
+        receipt.items = [receipt_toothbrush]
+
+        receipt_offers = {}
+
+        cart = ShoppingCart()
+        cart._items = [toothbrush]
+        cart._product_quantities = {toothbrush: 2}
+
+        cart.handle_offers(receipt, receipt_offers, catalog)
+        self.assertEqual([], receipt.discounts)
 
     #def test_shopping_cart_handle_offers_three_for_two(self):
     #    catalog = FakeCatalog()
